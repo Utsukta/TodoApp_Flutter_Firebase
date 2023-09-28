@@ -160,6 +160,13 @@ class _MyHomePageState extends State<MyHomePage> {
     todos = [];
   }
 
+  final addsnackBar = const SnackBar(
+    content: Text('Task Added '),
+  );
+  final deletesnackBar = const SnackBar(
+    content: Text('Task Deleted'),
+  );
+
   createToDo() {
     DocumentReference documentReference =
         FirebaseFirestore.instance.collection("MyTodos").doc(title);
@@ -169,18 +176,16 @@ class _MyHomePageState extends State<MyHomePage> {
       "todoDesc": description
     };
 
-    documentReference
-        .set(todoList)
-        .whenComplete(() => print("Data stored successfully"));
+    documentReference.set(todoList).whenComplete(
+        () => ScaffoldMessenger.of(context).showSnackBar(addsnackBar));
   }
 
   deleteTodo(item) {
     DocumentReference documentReference =
         FirebaseFirestore.instance.collection("MyTodos").doc(item);
 
-    documentReference
-        .delete()
-        .whenComplete(() => print("deleted successfully"));
+    documentReference.delete().whenComplete(
+        () => ScaffoldMessenger.of(context).showSnackBar(deletesnackBar));
   }
 
   @override
@@ -217,7 +222,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               : ""),
                           trailing: IconButton(
                             icon: const Icon(Icons.delete),
-                            color: Colors.red,
+                            color: const Color.fromARGB(255, 190, 111, 105),
                             onPressed: () {
                               setState(() {
                                 //todos.removeAt(index);
@@ -258,7 +263,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   content: SizedBox(
                     width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height / 5,
+                    height: MediaQuery.of(context).size.height / 4,
                     child: Column(
                       children: [
                         TextField(
@@ -288,18 +293,17 @@ class _MyHomePageState extends State<MyHomePage> {
                   actions: <Widget>[
                     OutlinedButton(
                         onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text("Cancel")),
+                    OutlinedButton(
+                        onPressed: () {
                           setState(() {
-                            //todos.add(title);
                             createToDo();
                           });
                           Navigator.of(context).pop();
                         },
                         child: const Text("Add")),
-                    OutlinedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text("Delete")),
                   ],
                 );
               });
