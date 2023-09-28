@@ -157,7 +157,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    todos = [];
+    todos = ["Hello", "there"];
   }
 
   final addsnackBar = const SnackBar(
